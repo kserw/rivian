@@ -1,0 +1,20 @@
+{
+    "total_all_time": 2,
+    "krystian_all_time": 2,
+    "jensen_all_time": 0,
+    "monthly": {
+        "2025-04": {
+            "krystian": 2,
+            "jensen": 0,
+            "total": 2
+        }
+    },
+    "daily_max": {
+        "date": "2025-04-28",
+        "count": 2
+    },
+    "current_day": {
+        "date": "2025-04-28",
+        "count": 2
+    }
+}

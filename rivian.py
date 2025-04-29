@@ -234,6 +234,7 @@ def buy_rivn():
                 response_data = {
                     'status': 'success',
                     'message': random_message, # Use the random message
+                    'user_new_all_time_count': stats[f'{user}_all_time'], # Add specific user's new count
                     'updated_stats': { # Send all updated stats needed by the frontend
                          "total_all_time": stats["total_all_time"],
                          "krystian_all_time": stats["krystian_all_time"],
