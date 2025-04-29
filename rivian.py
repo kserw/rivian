@@ -16,7 +16,7 @@ STATS_FILE = "rivian_stats.json"
 # --- Helper Functions for Stats ---
 
 def read_stats():
-    """Reads stats from the JSON file."""
+    """Reads stats from the JSON file. Creates it with defaults if missing."""
     default_stats = {
         "total_all_time": 0,
         "krystian_all_time": 0,
@@ -47,6 +47,9 @@ def read_stats():
                              stats[key][sub_key] = sub_value
             return stats
     except (FileNotFoundError, json.JSONDecodeError):
+        print(f"File '{STATS_FILE}' not found or invalid. Creating with defaults.")
+        # Write the defaults to create the file before returning them
+        write_stats(default_stats)
         return default_stats # Return defaults if file missing or corrupt
 
 def write_stats(stats_data):
