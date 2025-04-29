@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I just saw a Rivian</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+        :root {
+            --rivian-yellow: #ffb106;
+            --rivian-dark: #1A1A1A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background-color: var(--rivian-dark);
+            color: white;
+            padding-top: 4rem;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .car-image {
+            width: 100%;
+            max-width: 300px;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        button {
+            background: var(--rivian-yellow);
+            color: var(--rivian-dark);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 350px;
+            margin: 1rem auto;
+            display: block;
+            position: relative;
+            box-shadow: 0 0 20px rgba(255, 177, 6, 0.5);
+            animation: glow 2s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 20px rgba(255, 177, 6, 0.5),
+                           0 0 40px rgba(255, 177, 6, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(255, 177, 6, 0.8),
+                           0 0 60px rgba(255, 177, 6, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 20px rgba(255, 177, 6, 0.5),
+                           0 0 40px rgba(255, 177, 6, 0.3);
+            }
+        }
+
+        button:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 0 40px rgba(255, 177, 6, 0.9),
+                       0 0 80px rgba(255, 177, 6, 0.6);
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 0 50px rgba(255, 177, 6, 1),
+                       0 0 100px rgba(255, 177, 6, 0.8);
+        }
+
+        #status {
+            margin-top: 2rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+            transform: translateY(10px);
+            color: white;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .success {
+            background-color: rgba(255, 177, 6, 0.3);
+            color: white;
+            opacity: 1;
+            transform: translateY(0);
+            box-shadow: 0 0 20px rgba(255, 177, 6, 0.4);
+            border: 1px solid rgba(255, 177, 6, 0.4);
+        }
+
+        .error {
+            background-color: rgba(255, 0, 0, 0.2);
+            color: white;
+            opacity: 1;
+            transform: translateY(0);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+
+        .rocket {
+            font-size: 1.5rem;
+            margin-left: 0.5rem;
+            display: inline-block;
+            animation: rocket 1s ease infinite;
+        }
+
+        @keyframes rocket {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+        }
+
+        .confetti-rocket {
+            position: absolute;
+            font-size: 1.2rem;
+            animation: confetti 1.5s ease-out forwards;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes confetti {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(var(--ty)) rotate(var(--r));
+                opacity: 0;
+            }
+        }
+
+        /* Styles for the counter */
+        .counter-container {
+            text-align: center;
+        }
+        .counter-number {
+            font-size: 6rem;
+            font-weight: 600;
+            color: var(--rivian-yellow);
+            line-height: 1;
+        }
+        .counter-label {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.5rem;
+        }
+
+        /* Styles for sub-counters */
+        .sub-counters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .sub-counter {
+            text-align: center;
+        }
+        .sub-counter-number {
+            font-size: 2rem;
+            font-weight: 600;
+            color: white;
+            line-height: 1;
+        }
+        .sub-counter-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 0.3rem;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button onclick="buyRivn('krystian')">Krystian saw a Rivian</button>
+        <img src="https://static.tcimg.net/vehicles/primary/9fe10ffb8b90e332/2022-Rivian-R1S-silver-full_color-driver_side_profile.png" alt="Rivian R1S" class="car-image">
+        <button onclick="buyRivn('jensen')">Jensen saw a Rivian</button>
+        <div id="status"></div>
+
+        <!-- Main Counter Display -->
+        <div class="counter-container">
+            <div id="total-all-time" class="counter-number">{{ total_all_time | default(0) }}</div>
+            <div class="counter-label">Total Rivians</div>
+        </div>
+
+        <!-- Sub-Counters Grid -->
+        <div class="sub-counters-grid">
+            <div class="sub-counter">
+                <div id="total-month" class="sub-counter-number">{{ total_this_month | default(0) }}</div>
+                <div class="sub-counter-label">Total This Month</div>
+            </div>
+             <div class="sub-counter">
+                <div id="most-day" class="sub-counter-number">{{ most_in_a_day | default(0) }}</div>
+                <div class="sub-counter-label">Most Seen in a Day</div>
+            </div>
+            <div class="sub-counter">
+                <div id="krystian-all-time" class="sub-counter-number">{{ krystian_all_time | default(0) }}</div>
+                <div class="sub-counter-label">Krystian All Time</div>
+            </div>
+             <div class="sub-counter">
+                <div id="jensen-all-time" class="sub-counter-number">{{ jensen_all_time | default(0) }}</div>
+                <div class="sub-counter-label">Jensen All Time</div>
+            </div>
+             <div class="sub-counter">
+                <div id="krystian-month" class="sub-counter-number">{{ krystian_this_month | default(0) }}</div>
+                <div class="sub-counter-label">Krystian This Month</div>
+            </div>
+             <div class="sub-counter">
+                <div id="jensen-month" class="sub-counter-number">{{ jensen_this_month | default(0) }}</div>
+                <div class="sub-counter-label">Jensen This Month</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let clickCount = 0;
+
+        function createConfetti(buttonElement) {
+            const buttonRect = buttonElement.getBoundingClientRect();
+            const centerX = buttonRect.left + buttonRect.width / 2;
+            const centerY = buttonRect.top + buttonRect.height / 2;
+
+            // Number of rockets matches click count (1 for first click, 2 for second, etc.)
+            const numRockets = clickCount;
+            
+            // Create rockets
+            for (let i = 0; i < numRockets; i++) {
+                const rocket = document.createElement('div');
+                rocket.className = 'confetti-rocket';
+                rocket.textContent = '🚀';
+                
+                // Random horizontal offset and vertical distance
+                const offset = (Math.random() - 0.5) * 200; // Increased horizontal spread to 200
+                const distance = 150 + Math.random() * 150; // Increased vertical range
+                const rotation = (Math.random() - 0.5) * 30; // Slight random rotation
+                
+                // Set position and rotation
+                rocket.style.setProperty('--ty', `-${distance}px`);
+                rocket.style.setProperty('--r', `${rotation}deg`);
+                
+                // Position at button center with random horizontal offset
+                rocket.style.left = `${centerX + offset}px`;
+                rocket.style.top = `${centerY}px`;
+                
+                document.body.appendChild(rocket);
+                
+                // Remove after animation
+                setTimeout(() => rocket.remove(), 1500);
+            }
+        }
+
+        async function buyRivn(user) {
+            const statusDiv = document.getElementById('status');
+            const button = event.target;
+            
+            // Increment click count
+            clickCount++;
+            
+            // Create confetti effect
+            createConfetti(button);
+            
+            // Disable button without changing text
+            button.disabled = true;
+            statusDiv.textContent = '';
+            statusDiv.className = '';
+
+            try {
+                const response = await fetch('/buy_rivn', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user: user })
+                });
+
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    statusDiv.textContent = data.message || 'Order submitted successfully!'; // Use message from backend
+                    statusDiv.className = 'success';
+                    statusDiv.style.display = 'flex';
+                    statusDiv.style.opacity = '1';
+                    statusDiv.style.transform = 'translateY(0)';
+
+                    // Update all counter displays if stats are provided
+                    if (data.updated_stats) {
+                        document.getElementById('total-all-time').textContent = data.updated_stats.total_all_time ?? 0;
+                        document.getElementById('total-month').textContent = data.updated_stats.total_this_month ?? 0;
+                        document.getElementById('krystian-all-time').textContent = data.updated_stats.krystian_all_time ?? 0;
+                        document.getElementById('jensen-all-time').textContent = data.updated_stats.jensen_all_time ?? 0;
+                        document.getElementById('krystian-month').textContent = data.updated_stats.krystian_this_month ?? 0;
+                        document.getElementById('jensen-month').textContent = data.updated_stats.jensen_this_month ?? 0;
+                        document.getElementById('most-day').textContent = data.updated_stats.most_in_a_day ?? 0;
+                    }
+                } else {
+                    statusDiv.textContent = data.message || 'An error occurred. Please try again.';
+                    statusDiv.className = 'error';
+                    statusDiv.style.display = 'flex';
+                    statusDiv.style.opacity = '1';
+                    statusDiv.style.transform = 'translateY(0)';
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+                statusDiv.textContent = 'An network or fetch error occurred. Please try again.';
+                statusDiv.className = 'error';
+                statusDiv.style.display = 'flex';
+                statusDiv.style.opacity = '1';
+                statusDiv.style.transform = 'translateY(0)';
+            } finally {
+                button.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html> 

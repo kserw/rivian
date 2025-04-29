@@ -1,0 +1,23 @@
+# Core functionality
+requests==2.31.0
+beautifulsoup4==4.12.2
+anthropic>=0.20.0  # Claude API client
+python-dotenv==1.0.1
+cssutils>=2.7.0  # For CSS parsing
+webcolors>=1.13.1  # For color processing
+
+# Optional for dynamic website scraping
+# playwright>=1.40.0
+
+# Utility packages 
+tqdm>=4.66.0  # For progress bars
+colorama>=0.4.6  # For colored terminal output
+
+# LLM Interaction (choose one or more)
+# openai
+# Run 'playwright install' after installing this package
+
+# Optional: For deployment
+# netlify-cli # Requires separate installation and login 
+
+flask==3.0.2 
