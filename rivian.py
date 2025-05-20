@@ -11,7 +11,10 @@ load_dotenv()
 
 app = Flask(__name__)
 
-STATS_FILE = "rivian_stats.json"
+# Ensure stats file path is absolute so it works regardless of the
+# current working directory (useful in serverless environments).
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATS_FILE = os.path.join(BASE_DIR, "rivian_stats.json")
 
 # --- Helper Functions for Stats ---
 
