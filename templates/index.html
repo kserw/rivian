@@ -251,6 +251,46 @@
         // Removed unused global clickCount variable
         // let clickCount = 0;
 
+        // When the page loads, populate counters from localStorage first (for fast
+        // loading), then fetch the latest stats from the server so that the
+        // numbers stay in sync across different browsers.
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('rivian-stats');
+            if (saved) {
+                try {
+                    const stats = JSON.parse(saved);
+                    document.getElementById('total-all-time').textContent = stats.total_all_time ?? 0;
+                    document.getElementById('total-month').textContent = stats.total_this_month ?? 0;
+                    document.getElementById('krystian-all-time').textContent = stats.krystian_all_time ?? 0;
+                    document.getElementById('jensen-all-time').textContent = stats.jensen_all_time ?? 0;
+                    document.getElementById('krystian-month').textContent = stats.krystian_this_month ?? 0;
+                    document.getElementById('jensen-month').textContent = stats.jensen_this_month ?? 0;
+                    document.getElementById('most-day').textContent = stats.most_in_a_day ?? 0;
+                } catch (e) {
+                    console.warn('Failed to parse stored stats', e);
+                }
+            }
+
+            // Always fetch the latest stats from the server
+            fetch('/stats')
+                .then((resp) => resp.json())
+                .then((serverStats) => {
+                    document.getElementById('total-all-time').textContent = serverStats.total_all_time ?? 0;
+                    document.getElementById('total-month').textContent = serverStats.total_this_month ?? 0;
+                    document.getElementById('krystian-all-time').textContent = serverStats.krystian_all_time ?? 0;
+                    document.getElementById('jensen-all-time').textContent = serverStats.jensen_all_time ?? 0;
+                    document.getElementById('krystian-month').textContent = serverStats.krystian_this_month ?? 0;
+                    document.getElementById('jensen-month').textContent = serverStats.jensen_this_month ?? 0;
+                    document.getElementById('most-day').textContent = serverStats.most_in_a_day ?? 0;
+
+                    // Update localStorage so refreshes and other browsers show the same numbers
+                    localStorage.setItem('rivian-stats', JSON.stringify(serverStats));
+                })
+                .catch((err) => {
+                    console.warn('Failed to fetch latest stats', err);
+                });
+        });
+
         // createConfetti function now accepts rocketCount
         function createConfetti(buttonElement, rocketCount) { 
             const buttonRect = buttonElement.getBoundingClientRect();
@@ -320,6 +360,9 @@
                         document.getElementById('krystian-month').textContent = data.updated_stats.krystian_this_month ?? 0;
                         document.getElementById('jensen-month').textContent = data.updated_stats.jensen_this_month ?? 0;
                         document.getElementById('most-day').textContent = data.updated_stats.most_in_a_day ?? 0;
+
+                        // Persist counters locally so they survive page refresh
+                        localStorage.setItem('rivian-stats', JSON.stringify(data.updated_stats));
 
                         // Create confetti based on the specific user's new all-time count
                         const userSpecificAllTimeCount = data.user_new_all_time_count ?? 0; // Get the count from response

@@ -11,7 +11,10 @@ load_dotenv()
 
 app = Flask(__name__)
 
-STATS_FILE = "rivian_stats.json"
+# Ensure stats file path is absolute so it works regardless of the
+# current working directory (useful in serverless environments).
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATS_FILE = os.path.join(BASE_DIR, "rivian_stats.json")
 
 # --- Helper Functions for Stats ---
 
@@ -92,6 +95,30 @@ def index():
         "most_in_a_day": stats.get("daily_max", {}).get("count", 0)
     }
     return render_template('index.html', **template_data)
+
+# New route to retrieve the latest stats in JSON format so clients can
+# sync counters across different browsers.
+@app.route('/stats', methods=['GET'])
+def get_stats():
+    """Return current statistics as JSON."""
+    stats = read_stats()
+    now = datetime.now()
+    current_month_str = now.strftime("%Y-%m")
+
+    monthly_stats = stats.get("monthly", {}).get(
+        current_month_str, {"krystian": 0, "jensen": 0, "total": 0}
+    )
+
+    response_data = {
+        "total_all_time": stats.get("total_all_time", 0),
+        "krystian_all_time": stats.get("krystian_all_time", 0),
+        "jensen_all_time": stats.get("jensen_all_time", 0),
+        "total_this_month": monthly_stats.get("total", 0),
+        "krystian_this_month": monthly_stats.get("krystian", 0),
+        "jensen_this_month": monthly_stats.get("jensen", 0),
+        "most_in_a_day": stats.get("daily_max", {}).get("count", 0),
+    }
+    return jsonify(response_data)
 
 @app.route('/buy_rivn', methods=['POST'])
 def buy_rivn():
